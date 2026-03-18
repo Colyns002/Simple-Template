@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - DocTemplateHub</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="admin-body">
+    
+    <!-- Login Overlay Simulation -->
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-card">
+            <h2>Admin Login</h2>
+            <p>Enter the admin password to access the CMS.</p>
+            <input type="password" id="admin-password" placeholder="Password (type: admin)">
+            <button id="btn-login" class="btn-primary">Login</button>
+            <p id="login-error" class="error-msg"></p>
+        </div>
+    </div>
+
+    <!-- Main Dashboard Application -->
+    <div id="admin-app" class="admin-layout" style="display: none;">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <a href="index.html">DocTemplate<span>Hub</span></a>
+                <span class="badge">cms</span>
+            </div>
+            
+            <ul class="admin-nav">
+                <li class="active" data-target="view-templates"><i class="fas fa-file-contract"></i> Manage Templates</li>
+                <li data-target="view-blogs"><i class="fas fa-newspaper"></i> Manage Blog</li>
+                <li><a href="index.html" style="color: inherit; text-decoration: none;"><i class="fas fa-external-link-alt"></i> View Live Site</a></li>
+            </ul>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="admin-content">
+            <header class="admin-header">
+                <h2>Dashboard Overview</h2>
+                <div class="user-profile">
+                    <span>Admin User</span>
+                    <button id="btn-logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </header>
+            
+            <div class="admin-panels">
+            
+                <!-- TEMPLATES PANEL -->
+                <section id="view-templates" class="admin-panel active">
+                    <div class="panel-header">
+                        <h3>Templates Directory</h3>
+                        <button class="btn-primary" onclick="openModal('modal-template')"><i class="fas fa-plus"></i> Add New Template</button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Icon</th>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th>Edit Links Status</th>
+                                    <th>Downloads</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tmpl-table-body">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                <!-- BLOG PANEL -->
+                <section id="view-blogs" class="admin-panel">
+                    <div class="panel-header">
+                        <h3>Published Blog Posts</h3>
+                        <button class="btn-primary" onclick="openModal('modal-blog')"><i class="fas fa-plus"></i> Write New Post</button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Title</th>
+                                    <th>Category</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="blog-table-body">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal: Add/Edit Template -->
+    <div id="modal-template" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-template-title">Add New Template</h3>
+                <span class="close-modal" onclick="closeModal('modal-template')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="form-template">
+                    <input type="hidden" id="tmpl-id">
+                    
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="tmpl-title" required placeholder="e.g. Non-Disclosure Agreement">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="tmpl-desc" required rows="3" placeholder="Brief description of the template..."></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="tmpl-category">
+                                <option value="Business">Business</option>
+                                <option value="Property">Property</option>
+                                <option value="Personal">Personal</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Font Awesome Icon Class</label>
+                            <input type="text" id="tmpl-icon" placeholder="e.g. fas fa-file-contract" value="fas fa-file-alt">
+                        </div>
+                    </div>
+                    
+                    <h4 style="margin: 15px 0 10px;">Editable Links</h4>
+                    <p style="font-size: 0.85rem; color: #666; margin-bottom: 10px;">Leave blank or use "#" to hide the button.</p>
+                    
+                    <div class="form-group">
+                        <label>Canva Share Link</label>
+                        <input type="text" id="tmpl-canva" placeholder="https://www.canva.com/...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Adobe Express Share Link</label>
+                        <input type="text" id="tmpl-adobe" placeholder="https://new.express.adobe.com/...">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="closeModal('modal-template')" style="background: #ccc; color: #333;">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Template</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal: Add/Edit Blog -->
+    <div id="modal-blog" class="modal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h3 id="modal-blog-title">Write New Post</h3>
+                <span class="close-modal" onclick="closeModal('modal-blog')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="form-blog">
+                    <input type="hidden" id="blog-id">
+                    
+                    <div class="form-group">
+                        <label>Post Title</label>
+                        <input type="text" id="blog-title" required placeholder="Catchy title...">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="blog-category">
+                                <option value="Property Law">Property Law</option>
+                                <option value="Estate Planning">Estate Planning</option>
+                                <option value="Business Law">Business Law</option>
+                                <option value="Legal Tips">Legal Tips</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Featured Image URL</label>
+                            <input type="text" id="blog-image" placeholder="https://images.unsplash.com/..." value="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Excerpt (Short Description for Card)</label>
+                        <textarea id="blog-excerpt" required rows="2"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Full Content (HTML allowed)</label>
+                        <textarea id="blog-content" required rows="8"></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="closeModal('modal-blog')" style="background: #ccc; color: #333;">Cancel</button>
+                        <button type="submit" class="btn-primary">Publish Post</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load centralized data and dashboard logic -->
+    <script src="js/data-init.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
