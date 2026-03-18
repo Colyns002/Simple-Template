@@ -42,7 +42,10 @@ function closeModal(modalId) {
     document.getElementById(modalId).classList.remove('active');
     // Reset forms when closing
     if(modalId === 'modal-template') document.getElementById('form-template').reset();
-    if(modalId === 'modal-blog') document.getElementById('form-blog').reset();
+    if(modalId === 'modal-blog') {
+        document.getElementById('form-blog').reset();
+        if (typeof quill !== 'undefined') quill.root.innerHTML = '';
+    }
     
     // Reset hidden IDs
     document.getElementById('tmpl-id').value = '';
@@ -196,7 +199,7 @@ document.getElementById('form-blog').addEventListener('submit', (e) => {
         category: document.getElementById('blog-category').value,
         image: document.getElementById('blog-image').value,
         excerpt: document.getElementById('blog-excerpt').value,
-        content: document.getElementById('blog-content').value,
+        content: quill.root.innerHTML,
         date: isNew ? today.toLocaleDateString('en-US', options) : getBlogById(id).date,
         readTime: isNew ? "5 min read" : getBlogById(id).readTime // arbitrary for now
     };
@@ -224,7 +227,7 @@ function editBlog(id) {
     document.getElementById('blog-category').value = b.category;
     document.getElementById('blog-image').value = b.image || '';
     document.getElementById('blog-excerpt').value = b.excerpt;
-    document.getElementById('blog-content').value = b.content;
+    quill.root.innerHTML = b.content;
     
     openModal('modal-blog');
 }
@@ -240,3 +243,8 @@ function deleteBlog(id) {
 function getBlogById(id) {
     return db.getBlogs().find(b => b.id === id);
 }
+
+// --- Initialize Quill Editor ---
+const quill = new Quill('#blog-content-editor', {
+    theme: 'snow'
+});
